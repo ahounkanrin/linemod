@@ -4,10 +4,8 @@ from tqdm import tqdm
 import pandas as pd
 import os
 
-
-
-data_dir = "/home/user/Datasets/hinterstoisser/train/"
-test_dir = "/home/user/Datasets/hinterstoisser/test/"
+data_dir = "/home/anicet/Datasets/LINEMOD/hinterstoisser/train/"
+test_dir = "/home/anicet/Datasets/LINEMOD/hinterstoisser/test/"
 classes = ["01", "02", "03", "04", "05", "06", "07", "08", "09",
             "10", "11", "12", "13", "14", "15"]
 
@@ -24,15 +22,15 @@ for class_id in classes:
         rgb_img = cv.imread(data_dir + class_id + "/rgb/" + rgb_list[i], 1)
         depth_img = cv.imread(data_dir + class_id + "/depth/" + depth_list[i], 2)
         templateID, _ = lineModDetector.addTemplate((rgb_img, depth_img), class_id=class_id, object_mask=mask)
-    if counter==5:
+    if counter==2:
         break
 NumTemplates = lineModDetector.numTemplates()
 print("[INFO] Number of templates:", NumTemplates)
 
-class_ids = ["05"]
+class_ids = ["01"]
 threshold = 70.0
-source_rgb = cv.imread(test_dir + "05/" + "rgb/" + "0504.png", 1)
-source_d = cv.imread(test_dir + "05/" + "depth/" + "0504.png", 2)
+source_rgb = cv.imread(test_dir + "01/" + "rgb/" + "0504.png", 1)
+source_d = cv.imread(test_dir + "01/" + "depth/" + "0504.png", 2)
 matches, quantized_images = lineModDetector.match(sources=(source_rgb, source_d), threshold=threshold, class_ids=class_ids, masks=mask)
 
 if len(matches) > 0:
@@ -53,7 +51,7 @@ if len(matches) > 0:
         if j == 0:
             img = img_j
         else:
-            img = cv.vconcat([img, img_j])    
+            img = cv.vconcat([img, img_j])
         #locations[m[j].class_id].append((m[j].x, m[j].y))
 
     """for Class in classes:
