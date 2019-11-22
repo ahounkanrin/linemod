@@ -22,24 +22,24 @@ for class_id in classes:
         rgb_img = cv.imread(data_dir + class_id + "/rgb/" + rgb_list[i], 1)
         depth_img = cv.imread(data_dir + class_id + "/depth/" + depth_list[i], 2)
         templateID, _ = lineModDetector.addTemplate((rgb_img, depth_img), class_id=class_id, object_mask=mask)
-        #if i == 49:
-        #    break
-    if counter==2:
+        if i == 99:
+            break
+    if counter==5:
         break
 NumTemplates = lineModDetector.numTemplates()
 print("[INFO] Number of templates:", NumTemplates)
 
-class_ids = ["01"]
-threshold = 70.0
-source_rgb = cv.imread(data_dir + "01/" + "rgb/" + "0000.png", 1)
-source_d = cv.imread(data_dir + "01/" + "depth/" + "0000.png", 2)
+class_ids = ["02"]
+threshold = 80.0
+source_rgb = cv.imread(data_dir + "02/" + "rgb/" + "0000.png", 1)
+source_d = cv.imread(data_dir + "02/" + "depth/" + "0000.png", 2)
 matches, quantized_images = lineModDetector.match(sources=(source_rgb, source_d),
                             threshold=threshold, class_ids=class_ids, masks=mask)
 
 
 if len(matches) > 0:
     print("[INFO] Number of matches: {}\n".format(len(matches)))
-    m = matches[:20]
+    m = matches[:10]
 
     for j in range(len(m)):
         print("Match {}\t Similarity: {:.2f}\t x: {}\t y: {}\t class_id: {}\t \
