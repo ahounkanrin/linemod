@@ -22,8 +22,8 @@ for class_id in classes:
         rgb_img = cv.imread(data_dir + class_id + "/rgb/" + rgb_list[i], 1)
         depth_img = cv.imread(data_dir + class_id + "/depth/" + depth_list[i], 2)
         templateID, _ = lineModDetector.addTemplate((rgb_img, depth_img), class_id=class_id, object_mask=mask)
-        # if i == 99:
-        #     break
+    #     if i == 99:
+    #         break
     # if counter==2:
     #     break
 NumTemplates = lineModDetector.numTemplates()
@@ -51,26 +51,31 @@ if len(matches) > 0:
         source_rgb_copy = source_rgb.copy()
         #cv.circle(source_rgb_copy, (m[i].x, m[i].y), 10, (255, 0, 0), thickness=2)
 
-        # Find gradient feature locations in the template image
+        # Find gradient and surface normal feature locations in the template image
         templates = lineModDetector.getTemplates(class_id=matches[i].class_id, template_id=matches[i].template_id)
-        gradientTemplate = templates[0]
-        gradientFeatures = gradientTemplate.features
-        feature_locations = []
-        for j in range(len(gradientFeatures)):
-            x = gradientFeatures[j].x
-            y = gradientFeatures[j].y
-            feature_locations.append((x,y))
-    
-        # Draw feature locations without offset
-        for k in range(len(feature_locations)):
-            cv.circle(source_rgb_copy, feature_locations[k], 1, (0, 0, 255), thickness=2)
+        gradTemplate = templates[0]                 # choose grad features of the first pyramid level
+        surfaceNormalTemplate = templates[1]        # choose surface features of the first pyramid level
+        gradFeatures = gradTemplate.features
+        surfaceNormalFeatures = surfaceNormalTemplate.features
+        gradFeature_locations = [(f.x, f.y) for f in gradFeatures]
+        surfaceFeature_locations = [(g.x, g.y) for g in surfaceNormalFeatures]
+        
+        # Plot gradient and surface normal feature locations without offset
+        for j in range(len(gradFeature_locations)):
+            cv.circle(source_rgb_copy, gradFeature_locations[j], 1, (0, 0, 255), thickness=2)
 
-        # Draw feature locations with offset
+        # Plot gradient feature locations 
         offset = (m[i].x, m[i].y)
-        for l in range(len(feature_locations)):
-            x_offset = feature_locations[l][0] + offset[0]
-            y_offset = feature_locations[l][1] + offset[1]
-            cv.circle(source_rgb_copy, (x_offset, y_offset), 1, (0, 255, 0), thickness=2)
+        for k in range(len(gradFeature_locations)):
+            x = gradFeature_locations[k][0] + offset[0]
+            y = gradFeature_locations[k][1] + offset[1]
+            cv.circle(source_rgb_copy, (x, y), 1, (255, 0, 0), thickness=2)
+
+        # Plot surface normal features
+        for l in range(len(surfaceFeature_locations)):
+            x = surfaceFeature_locations[l][0] + offset[0]
+            y = surfaceFeature_locations[l][1] + offset[1]
+            cv.circle(source_rgb_copy, (x, y), 1, (0, 255, 0), thickness=2)
 
         img_i = cv.hconcat([source_rgb_copy, ref_rgb])
         if i == 0:
