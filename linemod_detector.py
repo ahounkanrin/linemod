@@ -31,8 +31,8 @@ print("[INFO] Number of templates:", NumTemplates)
 
 class_ids = "" #["02"]
 threshold = 60.0
-source_rgb = cv.imread(data_dir + "02/" + "rgb/" + "0000.png", 1)
-source_d = cv.imread(data_dir + "02/" + "depth/" + "0000.png", 2)
+source_rgb = cv.imread(data_dir + "01/" + "rgb/" + "0000.png", 1)
+source_d = cv.imread(data_dir + "01/" + "depth/" + "0000.png", 2)
 matches, quantized_images = lineModDetector.match(sources=(source_rgb, source_d),
                             threshold=threshold, class_ids=class_ids, masks=mask)
 
@@ -78,7 +78,7 @@ if len(matches) > 0:
         else:
             img = cv.vconcat([img, img_i])
 
-    cv.imwrite("02.png",img)
+    cv.imwrite("01.png",img)
 
 else:
     print("No matches found...")
