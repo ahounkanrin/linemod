@@ -1,8 +1,8 @@
+import os
 import cv2 as cv
 import numpy as np
 from tqdm import tqdm
 import pandas as pd
-import os
 
 data_dir = "/home/anicet/Datasets/LINEMOD/hinterstoisser/train/"
 test_dir = "/home/anicet/Datasets/LINEMOD/hinterstoisser/test/"
@@ -31,8 +31,8 @@ print("[INFO] Number of templates:", NumTemplates)
 
 class_ids = "" #["02"]
 threshold = 60.0
-source_rgb = cv.imread(data_dir + "01/" + "rgb/" + "0000.png", 1)
-source_d = cv.imread(data_dir + "01/" + "depth/" + "0000.png", 2)
+source_rgb = cv.imread(data_dir + "06/" + "rgb/" + "0000.png", 1)
+source_d = cv.imread(data_dir + "06/" + "depth/" + "0000.png", 2)
 matches, quantized_images = lineModDetector.match(sources=(source_rgb, source_d),
                             threshold=threshold, class_ids=class_ids, masks=mask)
 
@@ -62,8 +62,10 @@ if len(matches) > 0:
         
         # Plot gradient and surface normal feature locations without offset
         for j in range(len(gradFeature_locations)):
-            cv.circle(source_rgb_copy, gradFeature_locations[j], 1, (0, 0, 255), thickness=2)
+            cv.circle(source_rgb_copy, gradFeature_locations[j], 1, (255, 0, 0), thickness=2)
 
+        for j in range(len(surfaceFeature_locations)):
+            cv.circle(source_rgb_copy, surfaceFeature_locations[j], 1, (0, 255, 0), thickness=2)
         # Plot gradient feature locations 
         offset = (m[i].x, m[i].y)
         for k in range(len(gradFeature_locations)):
@@ -83,7 +85,7 @@ if len(matches) > 0:
         else:
             img = cv.vconcat([img, img_i])
 
-    cv.imwrite("01.png",img)
+    cv.imwrite("06.png", img)
 
 else:
     print("No matches found...")
