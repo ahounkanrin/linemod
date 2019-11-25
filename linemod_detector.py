@@ -12,9 +12,9 @@ classes = ["01", "02", "03", "04", "05", "06", "07", "08", "09",
 
 lineModDetector = cv.linemod.getDefaultLINEMOD()
 mask = np.array([])
-counter = 0
+#counter = 0
 for class_id in classes:
-    counter += 1
+    #counter += 1
     df = pd.read_csv("./" + class_id + ".csv")
     rgb_list = df["rgb"]
     depth_list = df["depth"]
@@ -30,16 +30,16 @@ NumTemplates = lineModDetector.numTemplates()
 print("[INFO] Number of templates:", NumTemplates)
 
 class_ids = "" #["02"]
-threshold = 60.0
-source_rgb = cv.imread(data_dir + "06/" + "rgb/" + "0000.png", 1)
-source_d = cv.imread(data_dir + "06/" + "depth/" + "0000.png", 2)
+threshold = 70.0
+source_rgb = cv.imread(test_dir + "01/" + "rgb/" + "0000.png", 1)
+source_d = cv.imread(test_dir + "01/" + "depth/" + "0000.png", 2)
 matches, quantized_images = lineModDetector.match(sources=(source_rgb, source_d),
                             threshold=threshold, class_ids=class_ids, masks=mask)
 
 
 if len(matches) > 0:
     print("[INFO] Number of matches: {}\n".format(len(matches)))
-    m = matches[:20]
+    m = matches[:10]
 
     for i in range(len(m)):
         print("Match {}\t Similarity: {:.2f}\t x: {}\t y: {}\t class_id: {}\t \
@@ -60,23 +60,17 @@ if len(matches) > 0:
         gradFeature_locations = [(f.x, f.y) for f in gradFeatures]
         surfaceFeature_locations = [(g.x, g.y) for g in surfaceNormalFeatures]
         
-        # Plot gradient and surface normal feature locations without offset
-        for j in range(len(gradFeature_locations)):
-            cv.circle(source_rgb_copy, gradFeature_locations[j], 1, (255, 0, 0), thickness=2)
-
-        for j in range(len(surfaceFeature_locations)):
-            cv.circle(source_rgb_copy, surfaceFeature_locations[j], 1, (0, 255, 0), thickness=2)
         # Plot gradient feature locations 
         offset = (m[i].x, m[i].y)
-        for k in range(len(gradFeature_locations)):
-            x = gradFeature_locations[k][0] + offset[0]
-            y = gradFeature_locations[k][1] + offset[1]
+        for point in gradFeature_locations:
+            x = point[0] + offset[0]
+            y = point[1] + offset[1]
             cv.circle(source_rgb_copy, (x, y), 1, (255, 0, 0), thickness=2)
 
         # Plot surface normal features
-        for l in range(len(surfaceFeature_locations)):
-            x = surfaceFeature_locations[l][0] + offset[0]
-            y = surfaceFeature_locations[l][1] + offset[1]
+        for point in surfaceFeature_locations:
+            x = point[0] + offset[0]
+            y = point[1] + offset[1]
             cv.circle(source_rgb_copy, (x, y), 1, (0, 255, 0), thickness=2)
 
         img_i = cv.hconcat([source_rgb_copy, ref_rgb])
@@ -85,7 +79,7 @@ if len(matches) > 0:
         else:
             img = cv.vconcat([img, img_i])
 
-    cv.imwrite("06.png", img)
+    cv.imwrite("test01.png", img)
 
 else:
     print("No matches found...")
