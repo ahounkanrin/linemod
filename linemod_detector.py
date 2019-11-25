@@ -4,8 +4,8 @@ import numpy as np
 from tqdm import tqdm
 import pandas as pd
 
-data_dir = "/home/user/Datasets/LINEMOD/hinterstoisser/train/"
-test_dir = "/home/user/Datasets/LINEMOD/hinterstoisser/test/"
+data_dir = "/home/anicet/Datasets/LINEMOD/hinterstoisser/train/"
+test_dir = "/home/anicet/Datasets/LINEMOD/hinterstoisser/test/"
 classes = ["01", "02", "03", "04", "05", "06", "07", "08", "09",
             "10", "11", "12", "13", "14", "15"]
 
@@ -61,16 +61,15 @@ if len(matches) > 0:
         surfaceFeature_locations = [(g.x, g.y) for g in surfaceNormalFeatures]
         
         # Plot gradient feature locations 
-        offset = (m.x, m.y)
         for point in gradFeature_locations:
-            x = point[0] + offset[0]
-            y = point[1] + offset[1]
+            x = point[0] + m.x
+            y = point[1] + m.y
             cv.circle(source_rgb_copy, (x, y), 1, (255, 0, 0), thickness=2)
 
         # Plot surface normal features
         for point in surfaceFeature_locations:
-            x = point[0] + offset[0]
-            y = point[1] + offset[1]
+            x = point[0] + m.x
+            y = point[1] + m.y
             cv.circle(source_rgb_copy, (x, y), 1, (0, 255, 0), thickness=2)
 
         img_i = cv.hconcat([source_rgb_copy, ref_rgb])
@@ -80,7 +79,7 @@ if len(matches) > 0:
             img = cv.vconcat([img, img_i])
         i += 1
 
-    cv.imwrite("test01.png", img)
+    cv.imwrite("01.png", img)
 
 else:
     print("No matches found...")
