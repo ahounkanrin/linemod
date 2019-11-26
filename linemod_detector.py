@@ -36,7 +36,6 @@ source_d = cv.imread(data_dir + "01/" + "depth/" + "0000.png", 2)
 matches, quantized_images = lineModDetector.match(sources=(source_rgb, source_d),
                             threshold=threshold, class_ids=class_ids, masks=mask)
 
-
 if len(matches) > 0:
     print("[INFO] Number of matches: {}\n".format(len(matches)))
     matches = matches[:10]
@@ -50,7 +49,6 @@ if len(matches) > 0:
         ref_rgb = cv.imread(data_dir + str(m.class_id) + "/rgb/" + str(rgb_list[m.template_id]), 1)
         source_rgb_copy = source_rgb.copy()
         
-
         # Find gradient and surface normal feature locations in the template image
         templates = lineModDetector.getTemplates(class_id=m.class_id, template_id=m.template_id)
         gradTemplate = templates[0]                 # choose grad features of the first pyramid level
