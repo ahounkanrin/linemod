@@ -12,9 +12,9 @@ classes = ["01", "02", "03", "04", "05", "06", "07", "08", "09",
 
 lineModDetector = cv.linemod.getDefaultLINEMOD()
 mask = np.array([])
-counter = 0
+#counter = 0
 for class_id in classes:
-    counter += 1
+    #counter += 1
     df = pd.read_csv("./" + class_id + ".csv")
     rgb_list = df["rgb"]
     depth_list = df["depth"]
@@ -22,10 +22,10 @@ for class_id in classes:
         rgb_img = cv.imread(data_dir + class_id + "/rgb/" + rgb_list[i], 1)
         depth_img = cv.imread(data_dir + class_id + "/depth/" + depth_list[i], 2)
         templateID, _ = lineModDetector.addTemplate((rgb_img, depth_img), class_id=class_id, object_mask=mask)
-        if i == 99:
-            break
-    if counter==2:
-        break
+    #     if i == 99:
+    #         break
+    # if counter==2:
+    #     break
 NumTemplates = lineModDetector.numTemplates()
 print("[INFO] Number of templates:", NumTemplates)
 
@@ -77,7 +77,7 @@ if len(matches) > 0:
             img = cv.vconcat([img, img_i])
         i += 1
 
-    cv.imwrite("01.png", img)
+    cv.imwrite("test01.png", img)
 
 else:
     print("No matches found...")
