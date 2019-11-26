@@ -49,7 +49,7 @@ if len(matches) > 0:
         rgb_list = df["rgb"]
         ref_rgb = cv.imread(data_dir + str(m.class_id) + "/rgb/" + str(rgb_list[m.template_id]), 1)
         source_rgb_copy = source_rgb.copy()
-        #cv.circle(source_rgb_copy, (m.x, m.y), 10, (255, 0, 0), thickness=2)
+        
 
         # Find gradient and surface normal feature locations in the template image
         templates = lineModDetector.getTemplates(class_id=m.class_id, template_id=m.template_id)
